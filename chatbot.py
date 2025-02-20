@@ -10,6 +10,11 @@ API_KEY = "AIzaSyBt3oF2OFDpcXznF8IJZwAPkspSqmVUxIA"
 # ✅ Correct API URL with quotes around the API key
 API_URL = f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={API_KEY}"
 
+# ✅ Homepage Route (Fixes "Not Found" issue)
+@app.route("/")
+def home():
+    return "Saraha Chatbot API is live! Send a POST request to /chat to interact."
+
 @app.route("/chat", methods=["POST"])
 def chat():
     user_input = request.json.get("message", "")

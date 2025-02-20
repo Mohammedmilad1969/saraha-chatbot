@@ -7,8 +7,12 @@ const port = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(cors({ origin: '*' }));
 
+// Log all incoming requests
+app.all('*', (req, res, next) => {
+    console.log(`${req.method} request made to: ${req.url}`);
+    next();
+});
 
 app.post('/proxy', async (req, res) => {
     try {

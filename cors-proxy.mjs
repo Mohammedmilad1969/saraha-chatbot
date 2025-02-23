@@ -30,7 +30,25 @@ app.post('/proxy', async (req, res) => {
             body: JSON.stringify(body)
         });
 
-        const data = await response.json();
+        // Check if the response is OK
+        if (!response.ok) {
+            console.error(`HTTP error! status: ${response.status}`);
+            return res.status(response.status).json({ error: 'Failed to fetch from the target URL.' });
+        }
+
+        // Check content type
+        const contentType = response.headers.get("content-type");
+        let data;
+
+        // Parse JSON only if the content type is application/json
+        if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            const text = await response.text(); // Get response as text if not JSON
+            console.error('Response is not JSON:', text);
+            return res.status(500).json({ error: 'Response is not in JSON format.' });
+        }
+
         res.json(data);
     } catch (error) {
         console.error('Error:', error);
